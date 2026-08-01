@@ -1,7 +1,7 @@
 'use client';
 
 import Ferrofluid from '../components/Ferrofluid';
-import OptionWheel from '../components/OptionWheel';
+//import OptionWheel from '../components/OptionWheel';
 import AiPersona from '../components/AiPersona';
 
 export default function Page() {
@@ -37,7 +37,7 @@ export default function Page() {
       </div>
 
       {/* Sidebar Navigation */}
-      <aside style={{ position: 'absolute', left: '24px', top: '50%', transform: 'translateY(-50%)', height: '400px', width: '256px', zIndex: 20, display: 'flex', alignItems: 'center', pointerEvents: 'auto' }}>
+      {/* <aside style={{ position: 'absolute', left: '24px', top: '50%', transform: 'translateY(-50%)', height: '400px', width: '256px', zIndex: 20, display: 'flex', alignItems: 'center', pointerEvents: 'auto' }}>
         <OptionWheel
           items={menuItems}
           defaultSelected={1}
@@ -54,7 +54,7 @@ export default function Page() {
           draggable={true}
          onChange={(index: number, item: string) => console.log('Selected menu:', item)}
         />
-      </aside>
+      </aside> */}
 
       {/* Center Content Container */}
       <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '540px', padding: '0 16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
