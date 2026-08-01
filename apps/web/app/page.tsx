@@ -52,7 +52,7 @@ export default function Page() {
           fade={0.3}
           inset={20}
           draggable={true}
-          onChange={(index, item) => console.log('Selected menu:', item)}
+         onChange={(index: number, item: string) => console.log('Selected menu:', item)}
         />
       </aside>
 
