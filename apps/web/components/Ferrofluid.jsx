@@ -190,8 +190,8 @@ void main() {
 `;
 
 const Ferrofluid = ({
-  className,
-  dpr,
+  className = '',
+  dpr = undefined,
   paused = false,
   colors = ['#ffffff', '#ffffff', '#ffffff'],
   speed = 0.5,
@@ -208,7 +208,7 @@ const Ferrofluid = ({
   mouseStrength = 1,
   mouseRadius = 0.35,
   mouseDampening = 0.15,
-  mixBlendMode
+  mixBlendMode = undefined
 }) => {
   const containerRef = useRef(null);
   const rafRef = useRef(null);
