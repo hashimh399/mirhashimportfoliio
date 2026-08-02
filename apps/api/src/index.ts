@@ -47,9 +47,9 @@ const fetchMarketData = async () => {
 };
 
 // Cron Job: Run every 60 seconds
-cron.schedule('* * * * *', () => {
-  fetchMarketData();
-});
+// cron.schedule('* * * * *', () => {
+//   fetchMarketData();
+// });
 
 // GET /api/ticker - Fast sub-millisecond read from Redis
 app.get('/api/ticker', async (req, res) => {
