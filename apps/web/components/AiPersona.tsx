@@ -13,7 +13,7 @@ export default function AiPersona({ onClose }: AiPersonaProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [aiResponseText, setAiResponseText] = useState("Hi , Ask me how can i help yow solve and scale !");
+  const [aiResponseText, setAiResponseText] = useState("Hey there, Ask me anything you want to know.");
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -100,10 +100,20 @@ export default function AiPersona({ onClose }: AiPersonaProps) {
     }
   };
 
+  // NEW: Single toggle function to handle click-to-start / click-to-stop
+  const toggleRecording = () => {
+    if (isProcessing) return;
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center p-6 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl w-full text-center">
       
-      {/* Mobile Close Button (Only renders if onClose prop is provided) */}
+      {/* Mobile Close Button */}
       {onClose && (
         <button 
           onClick={onClose} 
@@ -116,7 +126,7 @@ export default function AiPersona({ onClose }: AiPersonaProps) {
       {/* Header & Dynamic Text Container */}
       <div className="mb-4 w-full">
         <h2 className="text-sm font-semibold text-white mb-2 tracking-wide uppercase">
-          AI PERSONA
+          AI Persona
         </h2>
         <div className="min-h-[50px] flex items-center justify-center px-2">
           <SplitText
@@ -150,13 +160,9 @@ export default function AiPersona({ onClose }: AiPersonaProps) {
           <div className="absolute w-20 h-20 rounded-full bg-red-500/30 animate-ping" />
         )}
         
-        {/* Perfectly Centered Interactive Mic Button */}
+        {/* NEW: Replaced all hold events with a clean onClick toggle */}
         <button
-          onMouseDown={startRecording}
-          onMouseUp={stopRecording}
-          onMouseLeave={stopRecording}
-          onTouchStart={startRecording}
-          onTouchEnd={stopRecording}
+          onClick={toggleRecording}
           disabled={isProcessing}
           className={`relative z-10 flex items-center justify-center w-16 h-16 rounded-full border-none transition-all duration-200 ${
             isProcessing ? 'bg-zinc-800 cursor-not-allowed' : 
@@ -174,16 +180,16 @@ export default function AiPersona({ onClose }: AiPersonaProps) {
         </button>
       </div>
 
-      {/* Interactive Status Indicator */}
+      {/* Interactive Status Indicator (Updated Text) */}
       <div className="text-[10px] font-mono tracking-[0.15em] h-5 uppercase">
         {isProcessing ? (
           <span className="text-cyan-400">Processing Context...</span>
         ) : isRecording ? (
-          <span className="text-red-400">Listening... (Release)</span>
+          <span className="text-red-400">Listening... (Tap to stop)</span>
         ) : isPlaying ? (
           <span className="text-indigo-400">Speaking...</span>
         ) : (
-          <span className="text-zinc-500">Hold mic to talk</span>
+          <span className="text-zinc-500">Tap mic to talk</span>
         )}
       </div>
     </div>
