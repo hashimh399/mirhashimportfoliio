@@ -1,277 +1,230 @@
-// "use client";
-
-// import { useState } from "react";
-// import { Mic } from "lucide-react";
-// import LineSidebar from "@/components/ui/LineSidebar";
-// import Prism from "@/components/ui/Prism";
-// import AiPersona from "@/components/AiPersona";
-// import ExploreSection from "@/components/sections/ExploreSection";
-// import SkillsSection from "@/components/sections/SkillsSection";
-
-
-// const SECTIONS = ["Introduction", "Explore", "Experience", "Projects" , "Skills"];
-
-// export default function Home() {
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [isAiBubbleOpen, setIsAiBubbleOpen] = useState(false);
-
-//   return (
-//     <div className="relative flex flex-col md:flex-row h-full w-full bg-black">
-      
-//       {/* 1. THE BACKGROUND */}
-//       <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
-//         <Prism
-//           animationType="rotate"
-//           timeScale={0.3} 
-//           height={3.5}
-//           baseWidth={5.5}
-//           scale={3.6}
-//           hueShift={0}
-//           colorFrequency={1}
-//           noise={0.5}
-//           glow={1}
-//         />
-//       </div>
-
-//       {/* 2. RESPONSIVE NAVIGATION & SIDEBAR */}
-//       <aside className="relative z-10 w-full md:w-80 h-auto md:h-full border-b md:border-b-0 md:border-r border-white/10 bg-black/40 backdrop-blur-md pt-4 md:pt-12 px-6 md:px-8 flex-none flex flex-col">
-        
-//         {/* Header */}
-//         <div className="mb-4 md:mb-12 flex justify-between items-end md:block">
-//           <div>
-//             <h1 className="font-bold text-2xl md:text-3xl text-white tracking-tighter">
-//               Hashim Mir<span className="text-purple-500">.</span>
-//             </h1>
-//             <p className="text-[10px] md:text-xs text-neutral-500 mt-1 md:mt-2 tracking-widest uppercase font-semibold">
-//               Solutions Architect | Software Engineer
-//             </p>
-//           </div>
-//         </div>
-        
-//         {/* DESKTOP NAV: The React Bits Line Sidebar */}
-//         <div className="hidden md:flex flex-col flex-1 h-full">
-//           <LineSidebar
-//             items={SECTIONS}
-//             accentColor="#A855F7"
-//             textColor="#888888"
-//             markerColor="#444444"
-//             defaultActive={0}
-//             onItemClick={(index: number) => setActiveIndex(index)}
-//           />
-          
-//           {/* DESKTOP AI PERSONA (Pushed to bottom using mt-auto) */}
-//           <div className="mt-auto pb-8">
-//             <AiPersona />
-//           </div>
-//         </div>
-
-//         {/* MOBILE NAV: Horizontal Scrollable Menu */}
-//         <div className="md:hidden flex space-x-6 pb-2 overflow-x-auto w-full snap-x [&::-webkit-scrollbar]:hidden">
-//           {SECTIONS.map((sec, i) => (
-//             <button 
-//               key={sec} 
-//               onClick={() => setActiveIndex(i)}
-//               className={`snap-start text-sm whitespace-nowrap font-medium transition-colors ${
-//                 activeIndex === i ? 'text-purple-500' : 'text-neutral-500 hover:text-white'
-//               }`}
-//             >
-//               {sec}
-//             </button>
-//           ))}
-//         </div>
-//       </aside>
-
-//       {/* 3. THE CONTENT AREA */}
-//       <main className="relative z-10 flex-1 h-full p-6 md:p-16 overflow-y-auto">
-//         <div className="max-w-4xl h-full flex flex-col justify-start md:justify-center pt-8 md:pt-0">
-//           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
-//             Section: {SECTIONS[activeIndex]}
-//           </h2>
-//           <p className="text-lg md:text-xl text-neutral-400">
-//             Content placeholder for {SECTIONS[activeIndex]}.
-//           </p>
-//         </div>
-//       </main>
-
-//       {/* 4. MOBILE AI BUBBLE / FLOATING ACTION BUTTON */}
-//       <div className="md:hidden fixed bottom-6 right-6 z-50">
-//         {isAiBubbleOpen ? (
-//           <div className="animate-fade-in w-[90vw] max-w-[320px] mb-2 origin-bottom-right drop-shadow-2xl">
-//             <AiPersona onClose={() => setIsAiBubbleOpen(false)} />
-//           </div>
-//         ) : (
-//           <button
-//             onClick={() => setIsAiBubbleOpen(true)}
-//             className="w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-white/20 transition-transform hover:scale-105 active:scale-95"
-//           >
-//             <Mic className="w-6 h-6 text-white" />
-//           </button>
-//         )}
-//       </div>
-
-//     </div>
-//   );
-// }
-
 "use client";
 
-import { useState } from "react";
-import { Mic } from "lucide-react";
+import { useEffect, useState } from "react";
+import { MessageSquare } from "lucide-react";
 import LineSidebar from "@/components/ui/LineSidebar";
-import Prism from "@/components/ui/Prism";
 import AiPersona from "@/components/AiPersona";
+import IntroSection from "@/components/sections/IntroSection";
 import ExploreSection from "@/components/sections/ExploreSection";
 import SkillsSection from "@/components/sections/SkillsSection";
+import ExperienceSection from "@/components/sections/ExperienceSection";
+import ProjectsSection from "@/components/sections/ProjectsSection";
+import ThemeToggle from "@/components/ThemeToggle";
+import { useTheme } from "@/components/ThemeProvider";
+import { siteConfig } from "@/lib/site.config";
 
 const SECTIONS = ["Introduction", "Explore", "Experience", "Projects", "Skills"];
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isAiBubbleOpen, setIsAiBubbleOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [pendingPrompt, setPendingPrompt] = useState<string | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  const openChat = (prompt?: string) => {
+    if (prompt) setPendingPrompt(prompt);
+    setIsChatOpen(true);
+  };
+
+  const closeChat = () => setIsChatOpen(false);
+
+  const askAboutProject = (prompt: string) => {
+    openChat(prompt);
+  };
+
+  useEffect(() => {
+    if (!isChatOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isChatOpen]);
+
+  const sidebarAccent = isDark ? "#E5E5E5" : "#171717";
+  const sidebarText = isDark ? "#A3A3A3" : "#737373";
+  const sidebarMarker = isDark ? "#404040" : "#D4D4D4";
 
   return (
-    <div className="relative flex flex-col md:flex-row h-full w-full bg-black">
-      
-      {/* 1. THE BACKGROUND */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
-        <Prism
-          animationType="rotate"
-          timeScale={0.3} 
-          height={3.5}
-          baseWidth={5.5}
-          scale={3.6}
-          hueShift={0}
-          colorFrequency={1}
-          noise={0.5}
-          glow={1}
-        />
-      </div>
+    <div className="relative flex flex-col md:flex-row h-full w-full bg-background">
+      <div className="site-backdrop" aria-hidden />
 
-      {/* 2. RESPONSIVE NAVIGATION & SIDEBAR */}
-      <aside className="relative z-10 w-full md:w-80 h-auto md:h-full border-b md:border-b-0 md:border-r border-white/10 bg-black/40 backdrop-blur-md pt-4 md:pt-12 px-6 md:px-8 flex-none flex flex-col">
-        
-        {/* Header */}
-        <div className="mb-4 md:mb-12 flex justify-between items-end md:block">
-          <div>
-            <h1 className="font-bold text-2xl md:text-3xl text-white tracking-tighter">
-              Hashim Mir<span className="text-purple-500">.</span>
-            </h1>
-            <p className="text-[10px] md:text-xs text-neutral-500 mt-1 md:mt-2 tracking-widest uppercase font-semibold">
-              Solutions Architect | Software Engineer
-            </p>
+      <aside
+        className="relative z-10 w-full md:w-72 lg:w-80 h-auto md:h-full border-b md:border-b-0 md:border-r border-border flex-none flex flex-col md:min-h-0"
+        style={{ background: "var(--panel)" }}
+      >
+        <div className="pt-4 md:pt-10 px-4 md:px-7 pb-3 md:pb-0">
+          <div className="flex items-start justify-between gap-3 mb-4 md:mb-10">
+            <div className="min-w-0">
+              <h1 className="font-semibold text-xl md:text-2xl text-foreground tracking-tight">
+                {siteConfig.name}
+                <span className="text-muted-fg">.</span>
+              </h1>
+              <p className="text-[10px] md:text-[11px] text-muted-fg mt-1.5 tracking-[0.08em] uppercase font-medium leading-snug">
+                Solutions Architect · FDE
+              </p>
+            </div>
+            <ThemeToggle className="shrink-0" />
           </div>
-        </div>
-        
-        {/* DESKTOP NAV: The React Bits Line Sidebar */}
-        <div className="hidden md:flex flex-col flex-1 h-full">
-          <LineSidebar
-            items={SECTIONS}
-            accentColor="#A855F7"
-            textColor="#888888"
-            markerColor="#444444"
-            defaultActive={0}
-            onItemClick={(index: number) => setActiveIndex(index)}
-          />
-          
-          {/* DESKTOP AI PERSONA (Pushed to bottom using mt-auto) */}
-          <div className="mt-auto pb-8">
-            <AiPersona />
+
+          <div className="md:hidden -mx-1 px-1 flex gap-2 overflow-x-auto pb-1 snap-x [&::-webkit-scrollbar]:hidden">
+            {SECTIONS.map((sec, i) => {
+              const active = activeIndex === i;
+              return (
+                <button
+                  key={sec}
+                  type="button"
+                  onClick={() => setActiveIndex(i)}
+                  className={`snap-start shrink-0 rounded-md px-3 py-1.5 text-xs font-medium border transition-colors ${
+                    active
+                      ? "bg-foreground text-background border-transparent"
+                      : "bg-surface text-muted border-border hover:text-foreground"
+                  }`}
+                >
+                  {sec}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* MOBILE NAV: Horizontal Scrollable Menu */}
-        <div className="md:hidden flex space-x-6 pb-2 overflow-x-auto w-full snap-x [&::-webkit-scrollbar]:hidden">
-          {SECTIONS.map((sec, i) => (
-            <button 
-              key={sec} 
-              onClick={() => setActiveIndex(i)}
-              className={`snap-start text-sm whitespace-nowrap font-medium transition-colors ${
-                activeIndex === i ? 'text-purple-500' : 'text-neutral-500 hover:text-white'
-              }`}
+        <div className="hidden md:flex flex-col flex-1 h-full min-h-0 px-7">
+          <div className="flex-1 min-h-0 overflow-y-auto pr-1">
+            <LineSidebar
+              items={SECTIONS}
+              accentColor={sidebarAccent}
+              textColor={sidebarText}
+              markerColor={sidebarMarker}
+              defaultActive={0}
+              active={activeIndex}
+              onItemClick={(index: number) => setActiveIndex(index)}
+            />
+          </div>
+
+          <div className="mt-auto pb-5 pt-4 space-y-3 shrink-0 border-t border-border">
+            <button
+              type="button"
+              onClick={() => openChat()}
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium rounded-md border border-border bg-surface text-foreground hover:bg-surface-2 transition-colors"
             >
-              {sec}
+              <MessageSquare className="h-3.5 w-3.5" />
+              Ask AI
             </button>
-          ))}
+            <a
+              href={siteConfig.calendlyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-flex items-center justify-center px-4 py-2.5 text-xs font-medium rounded-md transition-opacity hover:opacity-90"
+              style={{ background: "var(--cta-bg)", color: "var(--cta-fg)" }}
+            >
+              Book a call
+            </a>
+            <div className="flex justify-center gap-3 text-[10px] text-muted-fg">
+              <a
+                href={siteConfig.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                LinkedIn
+              </a>
+              <span aria-hidden>·</span>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="hover:text-foreground transition-colors"
+              >
+                Email
+              </a>
+            </div>
+          </div>
         </div>
       </aside>
 
-      {/* 3. THE CONTENT AREA */}
-      <main className="relative z-10 flex-1 h-full p-6 md:p-16 overflow-y-auto">
-        <div className="max-w-5xl mx-auto h-full flex flex-col justify-start md:justify-center pt-8 md:pt-0">
-          
-          {/* 0. INTRODUCTION */}
+      <main className="relative z-10 flex-1 h-full min-h-0 px-4 py-5 sm:px-6 md:px-12 md:py-12 overflow-y-auto pb-24 md:pb-12">
+        <div className="max-w-3xl mx-auto w-full">
           {activeIndex === 0 && (
-            <div className="flex flex-col justify-center min-h-[70vh] animate-fade-in">
-              <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white">
-                Architecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Intelligence.</span>
-              </h2>
-              <p className="max-w-2xl text-lg text-neutral-400 leading-relaxed mb-10">
-                Solution Architect, AI Engineer, and Software Engineer. Building high-performance data pipelines, integrating LLM orchestration layers, and designing zero-knowledge web3 infrastructure.
-              </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setActiveIndex(4)} // Jumps to Skills tab
-                  className="px-6 py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-neutral-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                >
-                  View Technical Stack
-                </button>
-              </div>
+            <div className="animate-fade-in">
+              <IntroSection
+                onAskAi={() => openChat()}
+                onViewSkills={() => setActiveIndex(4)}
+              />
             </div>
           )}
 
-          {/* 1. EXPLORE (Deep Dives & Capabilities) */}
           {activeIndex === 1 && (
-            <div className="min-h-[70vh] animate-fade-in pt-8 md:pt-0">
+            <div className="animate-fade-in">
               <ExploreSection />
             </div>
           )}
 
-          {/* 2. EXPERIENCE (Timeline Placeholder) */}
           {activeIndex === 2 && (
-            <div className="min-h-[70vh] flex flex-col justify-center animate-fade-in">
-              <h2 className="text-4xl font-bold text-white mb-6 tracking-tight">Experience Journey.</h2>
-              <div className="p-8 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 text-neutral-400 shadow-2xl flex items-center justify-center min-h-[300px]">
-                Interactive timeline component will render here...
-              </div>
+            <div className="animate-fade-in">
+              <ExperienceSection />
             </div>
           )}
 
-          {/* 3. PROJECTS (Grid Placeholder) */}
           {activeIndex === 3 && (
-            <div className="min-h-[70vh] flex flex-col justify-center animate-fade-in">
-              <h2 className="text-4xl font-bold text-white mb-6 tracking-tight">Featured Projects.</h2>
-              <div className="p-8 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 text-neutral-400 shadow-2xl flex items-center justify-center min-h-[300px]">
-                Project grid component will render here...
-              </div>
+            <div className="animate-fade-in">
+              <ProjectsSection onAskAbout={askAboutProject} />
             </div>
           )}
 
-          {/* 4. SKILLS (Role-Based Toggle) */}
           {activeIndex === 4 && (
-            <div className="min-h-[70vh] animate-fade-in pt-8 md:pt-0">
+            <div className="animate-fade-in">
               <SkillsSection />
             </div>
           )}
-
         </div>
       </main>
 
-      {/* 4. MOBILE AI BUBBLE / FLOATING ACTION BUTTON */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
-        {isAiBubbleOpen ? (
-          <div className="animate-fade-in w-[90vw] max-w-[320px] mb-2 origin-bottom-right drop-shadow-2xl">
-            <AiPersona onClose={() => setIsAiBubbleOpen(false)} />
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsAiBubbleOpen(true)}
-            className="w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-white/20 transition-transform hover:scale-105 active:scale-95"
-          >
-            <Mic className="w-6 h-6 text-white" />
-          </button>
-        )}
-      </div>
+      {/* Mobile Ask AI FAB — hidden while panel open */}
+      {!isChatOpen && (
+        <button
+          type="button"
+          onClick={() => openChat()}
+          className="md:hidden fixed bottom-5 right-4 z-40 inline-flex h-12 items-center gap-2 rounded-md border border-border px-4 text-sm font-medium shadow-md transition-opacity hover:opacity-90"
+          style={{ background: "var(--cta-bg)", color: "var(--cta-fg)" }}
+          aria-label="Open AI chat"
+        >
+          <MessageSquare className="h-4 w-4" />
+          Ask AI
+        </button>
+      )}
 
+      {/* Chat overlay — desktop right drawer, mobile bottom sheet */}
+      {isChatOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"
+            aria-label="Close chat overlay"
+            onClick={closeChat}
+          />
+
+          <div
+            className="
+              relative z-10 flex w-full flex-col border-border bg-background shadow-2xl
+              max-md:mt-auto max-md:h-[min(88vh,720px)] max-md:rounded-t-2xl max-md:border-t
+              md:h-full md:w-[min(440px,100vw)] md:border-l
+              animate-fade-in
+            "
+          >
+            {/* Mobile drag affordance */}
+            <div className="md:hidden flex justify-center pt-2 pb-0" aria-hidden>
+              <span className="h-1 w-10 rounded-full bg-border" />
+            </div>
+
+            <div className="min-h-0 flex-1">
+              <AiPersona
+                onClose={closeChat}
+                pendingPrompt={pendingPrompt}
+                onPendingPromptConsumed={() => setPendingPrompt(null)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,197 +1,243 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { Mic, Square, Loader2, X } from 'lucide-react';
-import MagicRings from './MagicRing';
-import SplitText from './SplitText';
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { Loader2, MessageSquare, Send, X } from "lucide-react";
+import { chatSuggestions } from "@/lib/site.config";
+
+type ChatRole = "user" | "assistant";
+
+type ChatMessage = {
+  role: ChatRole;
+  content: string;
+};
 
 interface AiPersonaProps {
-  onClose?: () => void;
+  onClose: () => void;
+  pendingPrompt?: string | null;
+  onPendingPromptConsumed?: () => void;
 }
 
-export default function AiPersona({ onClose }: AiPersonaProps) {
-  const [isRecording, setIsRecording] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [aiResponseText, setAiResponseText] = useState("Hey there, Ask me anything you want to know.");
-  
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
-  const recordingStartTimeRef = useRef(0);
+const WELCOME =
+  "Hey — ask me anything about Hashim's resume, experience, or projects.";
 
-  const startRecording = async () => {
+export default function AiPersona({
+  onClose,
+  pendingPrompt,
+  onPendingPromptConsumed,
+}: AiPersonaProps) {
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { role: "assistant", content: WELCOME },
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const sendingRef = useRef(false);
+
+  useEffect(() => {
+    listRef.current?.scrollTo({
+      top: listRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, isLoading]);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => inputRef.current?.focus(), 50);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const sendMessage = async (raw: string) => {
+    const text = raw.trim();
+    if (!text || sendingRef.current) return;
+
+    sendingRef.current = true;
+    setError(null);
+    setInput("");
+    setIsLoading(true);
+
+    const nextMessages: ChatMessage[] = [
+      ...messages,
+      { role: "user", content: text },
+    ];
+    const historyForApi = nextMessages.filter(
+      (m, i) =>
+        !(i === 0 && m.role === "assistant" && m.content === WELCOME)
+    );
+
+    setMessages(nextMessages);
+
     try {
-      if (audioPlayerRef.current) {
-        audioPlayerRef.current.pause();
-        audioPlayerRef.current.currentTime = 0;
-        setIsPlaying(false);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+      const response = await fetch(`${apiUrl}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: historyForApi }),
+      });
+
+      const data = (await response.json().catch(() => ({}))) as {
+        reply?: string;
+        error?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(data.error || "Chat API failed");
       }
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        const recordingDuration = Date.now() - recordingStartTimeRef.current;
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-
-        if (recordingDuration < 500 || audioBlob.size === 0) {
-          return;
-        }
-
-        setIsProcessing(true);
-        const formData = new FormData();
-        formData.append('audio', audioBlob, 'recording.webm');
-
-        try {
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-          const response = await fetch(`${apiUrl}/api/voice`, {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (!response.ok) throw new Error('Voice API failed');
-
-          const encodedText = response.headers.get('X-AI-Text');
-          if (encodedText) {
-            setAiResponseText(decodeURIComponent(encodedText));
-          }
-
-          const responseBlob = await response.blob();
-          const audioUrl = URL.createObjectURL(responseBlob);
-          
-          const audio = new Audio(audioUrl);
-          audioPlayerRef.current = audio;
-          
-          audio.onplay = () => setIsPlaying(true);
-          audio.onended = () => setIsPlaying(false);
-          
-          audio.play();
-        } catch (error) {
-          console.error('Error fetching AI response:', error);
-          alert("Failed to connect to the AI brain.");
-        } finally {
-          setIsProcessing(false);
-        }
-      };
-
-      recordingStartTimeRef.current = Date.now();
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-      alert('Microphone access is required.');
+      const reply =
+        data.reply?.trim() || "I couldn't generate a reply. Try again.";
+      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
+    } catch (err) {
+      const detail =
+        err instanceof Error ? err.message : "Could not reach the AI.";
+      setError(detail);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content:
+            "I'm having trouble connecting right now. Please try again in a moment.",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+      sendingRef.current = false;
     }
   };
 
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-    }
-  };
+  useEffect(() => {
+    if (!pendingPrompt?.trim()) return;
+    const prompt = pendingPrompt.trim();
+    onPendingPromptConsumed?.();
+    void sendMessage(prompt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fire once per pendingPrompt
+  }, [pendingPrompt]);
 
-  // NEW: Single toggle function to handle click-to-start / click-to-stop
-  const toggleRecording = () => {
-    if (isProcessing) return;
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    void sendMessage(input);
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-6 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl w-full text-center">
-      
-      {/* Mobile Close Button */}
-      {onClose && (
-        <button 
-          onClick={onClose} 
-          className="absolute top-4 right-4 text-neutral-400 hover:text-white transition-colors"
+    <div
+      className="flex h-full min-h-0 w-full flex-col bg-background text-left"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ai-chat-title"
+    >
+      <header className="flex shrink-0 items-start justify-between gap-3 border-b border-border px-4 py-4 sm:px-5">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface">
+            <MessageSquare className="h-4 w-4 text-foreground" />
+          </div>
+          <div className="min-w-0">
+            <h2
+              id="ai-chat-title"
+              className="text-sm font-semibold tracking-tight text-foreground"
+            >
+              Ask about Hashim
+            </h2>
+            <p className="mt-0.5 text-xs text-muted-fg">
+              Resume, experience, and projects
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-fg transition-colors hover:bg-surface hover:text-foreground"
+          aria-label="Close chat"
         >
-          <X className="w-5 h-5" />
+          <X className="h-4 w-4" />
         </button>
+      </header>
+
+      <div
+        ref={listRef}
+        className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5 space-y-3"
+      >
+        {messages.map((m, i) => (
+          <div
+            key={`${m.role}-${i}`}
+            className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[92%] rounded-lg px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                m.role === "user"
+                  ? "bg-foreground text-background"
+                  : "bg-surface text-muted border border-border"
+              }`}
+            >
+              {m.content}
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex items-center gap-2 px-1 text-xs text-muted-fg">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            Thinking…
+          </div>
+        )}
+      </div>
+
+      {messages.length <= 1 && !isLoading && (
+        <div className="shrink-0 px-4 pb-3 sm:px-5 flex flex-wrap gap-2">
+          {chatSuggestions.map((s) => (
+            <button
+              key={s}
+              type="button"
+              disabled={isLoading}
+              onClick={() => void sendMessage(s)}
+              className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
       )}
 
-      {/* Header & Dynamic Text Container */}
-      <div className="mb-4 w-full">
-        <h2 className="text-sm font-semibold text-white mb-2 tracking-wide uppercase">
-          AI Persona
-        </h2>
-        <div className="min-h-[50px] flex items-center justify-center px-2">
-          <SplitText
-            key={aiResponseText}
-            text={aiResponseText}
-            className="text-xs text-neutral-300 font-light"
-            delay={20}
-            duration={0.5}
-            splitType="words"
-            onLetterAnimationComplete={() => {}}
+      {error && (
+        <p className="shrink-0 px-4 pb-2 text-xs text-red-500 sm:px-5">{error}</p>
+      )}
+
+      <form
+        onSubmit={onSubmit}
+        className="shrink-0 border-t border-border bg-surface/80 p-3 sm:p-4"
+      >
+        <div className="flex items-center gap-2">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask about experience, projects, stack…"
+            disabled={isLoading}
+            className="min-w-0 flex-1 rounded-md border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-fg focus:outline-none focus:ring-1 focus:ring-foreground/20 disabled:opacity-60"
           />
+          <button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md disabled:opacity-40 transition-opacity hover:opacity-90"
+            style={{ background: "var(--cta-bg)", color: "var(--cta-fg)" }}
+            aria-label="Send"
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </button>
         </div>
-      </div>
-
-      {/* Central Visualizer Box with Button Dead-Center */}
-      <div className="relative w-32 h-32 flex items-center justify-center mb-4">
-        
-        {/* Magic Rings Animation Container */}
-        <div className="absolute -inset-10 pointer-events-none flex items-center justify-center opacity-85">
-          <MagicRings 
-            color="#06B6D4" 
-            colorTwo="#4F46E5" 
-            ringCount={4} 
-            speed={isPlaying || isRecording ? 2.5 : 0.6} 
-            hoverScale={1.1}
-          />
-        </div>
-
-        {/* Recording Ping Effect */}
-        {isRecording && (
-          <div className="absolute w-20 h-20 rounded-full bg-red-500/30 animate-ping" />
-        )}
-        
-        {/* NEW: Replaced all hold events with a clean onClick toggle */}
-        <button
-          onClick={toggleRecording}
-          disabled={isProcessing}
-          className={`relative z-10 flex items-center justify-center w-16 h-16 rounded-full border-none transition-all duration-200 ${
-            isProcessing ? 'bg-zinc-800 cursor-not-allowed' : 
-            isRecording ? 'bg-red-500 scale-95 shadow-[0_0_30px_rgba(239,68,68,0.6)] cursor-pointer' : 
-            'bg-gradient-to-br from-cyan-500 to-indigo-600 shadow-[0_0_20px_rgba(6,182,212,0.4)] cursor-pointer hover:scale-105'
-          }`}
-        >
-          {isProcessing ? (
-            <Loader2 className="w-6 h-6 text-white animate-spin" />
-          ) : isRecording ? (
-            <Square className="w-5 h-5 text-white fill-white" />
-          ) : (
-            <Mic className="w-6 h-6 text-white" />
-          )}
-        </button>
-      </div>
-
-      {/* Interactive Status Indicator (Updated Text) */}
-      <div className="text-[10px] font-mono tracking-[0.15em] h-5 uppercase">
-        {isProcessing ? (
-          <span className="text-cyan-400">Processing Context...</span>
-        ) : isRecording ? (
-          <span className="text-red-400">Listening... (Tap to stop)</span>
-        ) : isPlaying ? (
-          <span className="text-indigo-400">Speaking...</span>
-        ) : (
-          <span className="text-zinc-500">Tap mic to talk</span>
-        )}
-      </div>
+      </form>
     </div>
   );
 }

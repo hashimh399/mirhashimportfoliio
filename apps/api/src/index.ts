@@ -5,6 +5,7 @@ import cron from 'node-cron';
 import multer from 'multer';
 import axios from 'axios';
 import { handleVoiceChat } from './controllers/voice';
+import { handleTextChat } from './controllers/chat';
 import {redis} from './lib/redis';
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 const upload = multer({ dest: 'uploads/' });
 app.post('/api/voice', upload.single('audio'), handleVoiceChat);
+app.post('/api/chat', handleTextChat);
 const fetchMarketData = async () => {
   try {
     console.log('🔄 Fetching live market data...');

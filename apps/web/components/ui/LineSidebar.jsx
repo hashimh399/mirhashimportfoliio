@@ -40,6 +40,7 @@ const LineSidebar = ({
   fontSize = 1.1,
   smoothing = 100,
   defaultActive = 0,
+  active,
   onItemClick,
   className = ''
 }) => {
@@ -55,6 +56,12 @@ const LineSidebar = ({
 
   activeRef.current = activeIndex;
   smoothingRef.current = smoothing;
+
+  useEffect(() => {
+    if (typeof active === 'number' && active !== activeIndex) {
+      setActiveIndex(active);
+    }
+  }, [active, activeIndex]);
 
   // Single rAF loop that eases every item's --effect toward its target using
   // frame-rate independent exponential smoothing, so color, shift and scale
