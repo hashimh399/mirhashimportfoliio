@@ -5,15 +5,27 @@ import { MessageSquare } from "lucide-react";
 import LineSidebar from "@/components/ui/LineSidebar";
 import AiPersona from "@/components/AiPersona";
 import IntroSection from "@/components/sections/IntroSection";
-import ExploreSection from "@/components/sections/ExploreSection";
+import CaseStudiesSection from "@/components/sections/CaseStudiesSection";
+import ArchitectureSection from "@/components/sections/ArchitectureSection";
 import SkillsSection from "@/components/sections/SkillsSection";
-import ExperienceSection from "@/components/sections/ExperienceSection";
-import ProjectsSection from "@/components/sections/ProjectsSection";
+import AboutSection from "@/components/sections/AboutSection";
+import ContactSection from "@/components/sections/ContactSection";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "@/components/ThemeProvider";
-import { siteConfig } from "@/lib/site.config";
+import {
+  siteConfig,
+  linkHref,
+  isPlaceholderLink,
+} from "@/lib/site.config";
 
-const SECTIONS = ["Introduction", "Explore", "Experience", "Projects", "Skills"];
+const SECTIONS = [
+  "Introduction",
+  "Case Studies",
+  "Architecture",
+  "Skills",
+  "About",
+  "Contact",
+];
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -28,10 +40,6 @@ export default function Home() {
   };
 
   const closeChat = () => setIsChatOpen(false);
-
-  const askAboutProject = (prompt: string) => {
-    openChat(prompt);
-  };
 
   useEffect(() => {
     if (!isChatOpen) return;
@@ -112,9 +120,16 @@ export default function Home() {
               Ask AI
             </button>
             <a
-              href={siteConfig.calendlyUrl}
-              target="_blank"
+              href={linkHref(siteConfig.calendlyUrl)}
+              target={
+                isPlaceholderLink(siteConfig.calendlyUrl) ? undefined : "_blank"
+              }
               rel="noopener noreferrer"
+              title={
+                isPlaceholderLink(siteConfig.calendlyUrl)
+                  ? siteConfig.calendlyUrl
+                  : undefined
+              }
               className="w-full inline-flex items-center justify-center px-4 py-2.5 text-xs font-medium rounded-md transition-opacity hover:opacity-90"
               style={{ background: "var(--cta-bg)", color: "var(--cta-fg)" }}
             >
@@ -122,9 +137,18 @@ export default function Home() {
             </a>
             <div className="flex justify-center gap-3 text-[10px] text-muted-fg">
               <a
-                href={siteConfig.linkedinUrl}
-                target="_blank"
+                href={linkHref(siteConfig.linkedinUrl)}
+                target={
+                  isPlaceholderLink(siteConfig.linkedinUrl)
+                    ? undefined
+                    : "_blank"
+                }
                 rel="noopener noreferrer"
+                title={
+                  isPlaceholderLink(siteConfig.linkedinUrl)
+                    ? siteConfig.linkedinUrl
+                    : undefined
+                }
                 className="hover:text-foreground transition-colors"
               >
                 LinkedIn
@@ -147,38 +171,38 @@ export default function Home() {
             <div className="animate-fade-in">
               <IntroSection
                 onAskAi={() => openChat()}
-                onViewSkills={() => setActiveIndex(4)}
+                onViewCaseStudies={() => setActiveIndex(1)}
               />
             </div>
           )}
-
           {activeIndex === 1 && (
             <div className="animate-fade-in">
-              <ExploreSection />
+              <CaseStudiesSection onAskAbout={(p) => openChat(p)} />
             </div>
           )}
-
           {activeIndex === 2 && (
             <div className="animate-fade-in">
-              <ExperienceSection />
+              <ArchitectureSection />
             </div>
           )}
-
           {activeIndex === 3 && (
             <div className="animate-fade-in">
-              <ProjectsSection onAskAbout={askAboutProject} />
+              <SkillsSection onAskAi={() => openChat()} />
             </div>
           )}
-
           {activeIndex === 4 && (
             <div className="animate-fade-in">
-              <SkillsSection />
+              <AboutSection />
+            </div>
+          )}
+          {activeIndex === 5 && (
+            <div className="animate-fade-in">
+              <ContactSection />
             </div>
           )}
         </div>
       </main>
 
-      {/* Mobile Ask AI FAB — hidden while panel open */}
       {!isChatOpen && (
         <button
           type="button"
@@ -192,7 +216,6 @@ export default function Home() {
         </button>
       )}
 
-      {/* Chat overlay — desktop right drawer, mobile bottom sheet */}
       {isChatOpen && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <button
@@ -201,7 +224,6 @@ export default function Home() {
             aria-label="Close chat overlay"
             onClick={closeChat}
           />
-
           <div
             className="
               relative z-10 flex w-full flex-col border-border bg-background shadow-2xl
@@ -210,11 +232,9 @@ export default function Home() {
               animate-fade-in
             "
           >
-            {/* Mobile drag affordance */}
             <div className="md:hidden flex justify-center pt-2 pb-0" aria-hidden>
               <span className="h-1 w-10 rounded-full bg-border" />
             </div>
-
             <div className="min-h-0 flex-1">
               <AiPersona
                 onClose={closeChat}

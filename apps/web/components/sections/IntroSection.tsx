@@ -1,19 +1,23 @@
 "use client";
 
-import LogoTicker from "@/components/LogoTicker";
-import { hero, siteConfig } from "@/lib/site.config";
+import {
+  hero,
+  siteConfig,
+  linkHref,
+  isPlaceholderLink,
+} from "@/lib/site.config";
 
 type IntroSectionProps = {
   onAskAi?: () => void;
-  onViewSkills?: () => void;
+  onViewCaseStudies?: () => void;
 };
 
 export default function IntroSection({
   onAskAi,
-  onViewSkills,
+  onViewCaseStudies,
 }: IntroSectionProps) {
   return (
-    <div className="flex flex-col gap-10 md:gap-12 pb-6 md:pb-8">
+    <div className="flex flex-col gap-8 pb-6 md:pb-8">
       <div className="max-w-3xl">
         <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-fg">
           {siteConfig.title}
@@ -24,67 +28,56 @@ export default function IntroSection({
         <p className="mt-5 text-base md:text-lg text-muted leading-relaxed">
           {hero.subheadline}
         </p>
-        <p className="mt-6 text-sm md:text-[15px] text-muted leading-relaxed">
-          {hero.bio}
-        </p>
-
-        <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap gap-3">
-          <a
-            href={siteConfig.calendlyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex justify-center px-5 py-2.5 text-sm font-medium rounded-md transition-opacity hover:opacity-90"
-            style={{ background: "var(--cta-bg)", color: "var(--cta-fg)" }}
-          >
-            Book a call
-          </a>
-          <button
-            type="button"
-            onClick={onAskAi}
-            className="inline-flex justify-center px-5 py-2.5 border border-border bg-surface text-foreground text-sm font-medium rounded-md hover:bg-surface-2 transition-colors"
-          >
-            Ask AI
-          </button>
-          <button
-            type="button"
-            onClick={onViewSkills}
-            className="inline-flex justify-center px-5 py-2.5 text-muted text-sm font-medium hover:text-foreground transition-colors"
-          >
-            View skills
-          </button>
-        </div>
       </div>
 
-      <LogoTicker />
+      <div className="flex flex-wrap gap-2">
+        {hero.stats.map((stat) => (
+          <span
+            key={stat}
+            className="rounded-md border border-border bg-surface px-3 py-2 text-xs font-medium text-muted sm:text-[13px]"
+          >
+            {stat}
+          </span>
+        ))}
+      </div>
 
-      <div className="pt-2 border-t border-border max-w-xl">
-        <p className="text-[10px] uppercase tracking-[0.14em] text-muted-fg font-semibold mb-3">
-          Contact
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+        <a
+          href={linkHref(siteConfig.calendlyUrl)}
+          target={
+            isPlaceholderLink(siteConfig.calendlyUrl) ? undefined : "_blank"
+          }
+          rel="noopener noreferrer"
+          title={
+            isPlaceholderLink(siteConfig.calendlyUrl)
+              ? siteConfig.calendlyUrl
+              : undefined
+          }
+          className="inline-flex justify-center px-5 py-2.5 text-sm font-medium rounded-md transition-opacity hover:opacity-90"
+          style={{ background: "var(--cta-bg)", color: "var(--cta-fg)" }}
+        >
+          Book a Call
+        </a>
+        <button
+          type="button"
+          onClick={onViewCaseStudies}
+          className="inline-flex justify-center px-5 py-2.5 border border-border bg-surface text-foreground text-sm font-medium rounded-md hover:bg-surface-2 transition-colors"
+        >
+          View Case Studies
+        </button>
+        <button
+          type="button"
+          onClick={onAskAi}
+          className="inline-flex justify-center px-5 py-2.5 text-muted text-sm font-medium hover:text-foreground transition-colors"
+        >
+          Ask AI
+        </button>
+      </div>
+
+      <div className="max-w-2xl border-t border-border pt-8">
+        <p className="text-sm md:text-[15px] text-muted leading-relaxed">
+          {hero.shortIntro}
         </p>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
-          <a
-            href={siteConfig.calendlyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-foreground hover:text-accent transition-colors font-medium"
-          >
-            Calendly
-          </a>
-          <a
-            href={siteConfig.linkedinUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            LinkedIn
-          </a>
-          <a
-            href={`mailto:${siteConfig.email}`}
-            className="hover:text-foreground transition-colors break-all"
-          >
-            {siteConfig.email}
-          </a>
-        </div>
       </div>
     </div>
   );

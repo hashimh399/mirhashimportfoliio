@@ -1,180 +1,170 @@
+/** Swap placeholders via env or replace these strings before shipping. */
 export const siteConfig = {
   name: "Hashim Mir",
   fullName: "Hashim",
   title: "Solutions Architect & Forward Deployed Engineer",
   calendlyUrl:
-    process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com",
+    process.env.NEXT_PUBLIC_CALENDLY_URL || "[Insert Calendly Link Here]",
   linkedinUrl:
-    process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com/in/",
-  email: process.env.NEXT_PUBLIC_EMAIL || "hello@example.com",
-  githubUrl: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com",
+    process.env.NEXT_PUBLIC_LINKEDIN_URL || "[Insert LinkedIn URL]",
+  email: process.env.NEXT_PUBLIC_EMAIL || "Hashimh399@gmail.com",
 };
+
+export function linkHref(url: string): string {
+  if (!url || url.startsWith("[")) return "#";
+  return url;
+}
+
+export function isPlaceholderLink(url: string): boolean {
+  return !url || url.startsWith("[");
+}
 
 export const hero = {
   headline:
-    "Architecting AI-Native Systems at Enterprise Scale — From Whiteboard to Production",
+    "Architecting AI-Native Systems at Enterprise Scale. From Whiteboard to Production",
   subheadline:
-    "Solutions Architect & Forward Deployed Engineer turning complex enterprise problems into resilient, production-grade AI and distributed systems.",
-  bio: "I'm Hashim — a Solutions Architect and Forward Deployed Engineer who bridges the gap between enterprise ambition and production reality. Over 5+ years in software engineering, the last 3+ as a Solutions Architect, I've owned the full lifecycle of mission-critical platforms: architecting on-premise GenAI copilots for regulated banks, engineering event-driven pipelines that process 100,000+ events per second, and scaling communications platforms to 5,000+ concurrent enterprise users. Whether I'm whiteboarding architecture with stakeholders or debugging a distributed system in production, I care about building technology that works — reliably, securely, and at scale.",
-};
-
-export const explore = {
-  intro:
-    "I believe the best architecture is invisible — it's the systems that just work, even at 100,000 events per second, even under regulatory scrutiny, even when requirements change mid-sprint. My approach comes down to three principles:",
-  principles: [
-    {
-      title: "Design for production from day one",
-      body: "A prototype that can't survive contact with real users isn't a solution — it's a demo.",
-    },
-    {
-      title: "Own the outcome, not just the code",
-      body: "From pre-sales whiteboarding to post-launch sustainment, I stay accountable to the business problem, not just the ticket.",
-    },
-    {
-      title: "Treat AI as an engineering discipline, not magic",
-      body: "Agentic workflows and LLM pipelines deserve the same rigor — testing, observability, security — as any other production system.",
-    },
+    "Solutions Architect & Forward Deployed Engineer. I turn complex enterprise problems into resilient, production-grade AI and distributed systems that actually ship and stay up.",
+  stats: [
+    "5+ years software engineering",
+    "3+ years Solutions Architect",
+    "On-prem GenAI copilots for regulated banks",
+    "Event pipelines at 100k+ events/sec",
+    "Communications platforms scaled to 5,000+ concurrent enterprise users",
   ],
-  outro:
-    "I'm drawn to problems at the intersection of scale, regulation, and ambiguity — the kind of enterprise challenges where \"best practice\" doesn't exist yet, and someone has to design it.",
+  shortIntro:
+    "I'm Hashim. I bridge enterprise ambition and production reality. Whether whiteboarding architecture with stakeholders or debugging distributed systems at 2 a.m., I care about technology that works — reliably, securely, and at scale.",
 };
 
-export type ExperienceItem = {
-  company: string;
-  role: string;
-  period: string;
-  body: string;
-};
-
-export const experience: ExperienceItem[] = [
-  {
-    company: "Consilium Software",
-    role: "Solutions Architect / Lead Software Engineer",
-    period: "2023–Present",
-    body: "At Consilium Software, I found my niche at the intersection of enterprise architecture and applied AI. What began as designing omnichannel communications infrastructure — bridging CTI systems into enterprise CRMs like Salesforce and SAP C4C to serve 5,000+ concurrent agents — evolved into something more ambitious: architecting a secure, on-premise Generative AI Copilot for one of the most highly regulated environments imaginable, a bank's live contact center. Along the way, I built the connective tissue that makes real-time intelligence possible, including a Kafka-based event pipeline processing over 100,000 events per second and real-time analytics that surface live sentiment and performance data to the people who need it. I split my time between deep technical execution and being the primary architect in the room for pre-sales conversations, RFPs, and roadmap decisions — a dual role that taught me how to translate boardroom priorities into production code, and production realities back into strategy.",
-  },
-  {
-    company: "Cognizant",
-    role: "Software Engineer",
-    period: "2021–2023",
-    body: "My career began at Cognizant, where I built the foundations of enterprise software engineering within a large-scale consulting environment — the discipline, collaboration habits, and delivery rigor that still shape how I build today.",
-  },
-];
-
-export type ProjectItem = {
+export type CaseStudy = {
   id: string;
   title: string;
-  problem: string;
+  summary: string;
+  challenge: string;
   solution: string;
   impact: string;
+  tech: string;
   askPrompt: string;
-  note?: string;
 };
 
-export const projects: ProjectItem[] = [
+export const caseStudies: CaseStudy[] = [
   {
-    id: "genai-copilot",
-    title: "Enterprise GenAI Copilot for Regulated Banking",
-    problem:
-      "A highly regulated banking client needed to modernize its Genesys-based contact center with AI — but sensitive data couldn't leave a controlled environment, and the solution had to support live agents, supervisors, and self-service customers without compromising security or compliance.",
+    id: "onprem-genai",
+    title: "On-Premise GenAI Copilot for a Regulated Bank",
+    summary:
+      "Production-grade on-prem GenAI copilot used by hundreds of employees under full regulatory compliance.",
+    challenge:
+      "A major regulated bank needed an internal GenAI copilot for knowledge work and document analysis. Public cloud LLMs were off-limits due to data residency and compliance requirements.",
     solution:
-      "Architected and deployed a secure, on-premise GenAI Copilot suite featuring a Retrieval-Augmented Generation (RAG) pipeline for real-time agent assist, live supervisory dashboards, and an agentic workflow engine with automated tool-calling that could securely execute protected backend operations — all without data leaving the regulated environment.",
+      "Designed and led the architecture of a fully on-premise GenAI platform: Private LLM deployment + retrieval-augmented generation (RAG) pipeline; Secure document ingestion and vector store; Role-based access and full audit logging; Integration with existing enterprise systems.",
     impact:
-      "Delivered a production-grade agentic AI system inside one of the most compliance-sensitive environments in enterprise software — proof that AI-native workflows can operate safely at the level of rigor regulated industries demand.",
-    askPrompt: "Tell me about the enterprise GenAI Copilot for regulated banking.",
+      "Delivered production-grade copilot used by hundreds of employees. Maintained full regulatory compliance. Significantly reduced time spent searching internal knowledge bases.",
+    tech: "On-prem infrastructure, private LLMs, vector databases, enterprise identity systems, secure networking.",
+    askPrompt:
+      "Tell me about the on-premise GenAI Copilot for a regulated bank.",
   },
   {
-    id: "splunkbridge",
-    title: "SplunkBridge — High-Throughput Event Streaming Pipeline",
-    problem:
-      "Enterprise-grade observability was bottlenecked by disparate, high-volume data sources that couldn't be ingested, correlated, or routed fast enough for real-time monitoring.",
+    id: "event-pipeline",
+    title: "High-Throughput Event-Driven Pipeline",
+    summary:
+      "Sustained 100k+ events/sec in production with high availability and clear operational observability.",
+    challenge:
+      "Need to process and react to 100,000+ events per second with low latency and high reliability for a mission-critical enterprise system.",
     solution:
-      "Architected SplunkBridge, an Apache Kafka-based event-streaming pipeline that ingests, processes, and routes data from multiple disparate sources into a unified observability layer.",
+      "Architected an event-driven pipeline using modern streaming and messaging patterns, with careful attention to partitioning, back-pressure handling, exactly-once semantics where required, and observability.",
     impact:
-      "Enabled enterprise-grade observability at a sustained throughput of 100,000+ events per second — turning fragmented data into a real-time, unified operational picture.",
-    askPrompt: "Tell me about SplunkBridge and the throughput you achieved.",
+      "Sustained 100k+ events/sec in production. High availability and graceful degradation under load. Clear operational dashboards and alerting.",
+    tech: "Streaming / messaging, partitioning, back-pressure, observability.",
+    askPrompt:
+      "Tell me about the high-throughput event-driven pipeline at 100k+ events/sec.",
   },
   {
-    id: "omnichannel",
-    title: "Omnichannel Communications Platform",
-    problem:
-      "A large enterprise contact center operation needed a unified platform to blend voice and chat across multiple CRMs, without sacrificing latency or reliability as agent headcount scaled.",
+    id: "comms-scale",
+    title: "Enterprise Communications Platform Scale-Up",
+    summary:
+      "Scaled a communications platform to 5,000+ concurrent enterprise users with production-grade stability.",
+    challenge:
+      "Scale a communications platform to support 5,000+ concurrent enterprise users while maintaining performance and reliability.",
     solution:
-      "Engineered a scalable microservices architecture bridging CTI and reverse-CTI mechanisms into enterprise CRMs (Salesforce, SAP C4C), enabling seamless, low-latency blended voice and chat workflows.",
+      "End-to-end ownership of architecture and delivery: capacity planning, horizontal scaling strategy, stateful service design, and production hardening.",
     impact:
-      "Scaled the platform to reliably support 5,000 concurrent agents handling blended voice and chat workloads — a genuinely production-grade system operating at enterprise scale.",
-    askPrompt: "Describe the omnichannel communications platform you built.",
-  },
-  {
-    id: "neuroledger",
-    title: "Hackathon Feature: Neuroledger",
-    problem: "",
-    solution: "",
-    impact: "",
-    note: "Also worth a look: Neuroledger, a Chainlink hackathon project bridging off-chain LLM-based risk orchestration with deterministic on-chain DeFi execution (Chainlink CRE + Solidity).",
-    askPrompt: "Tell me about Neuroledger.",
+      "Successfully scaled to 5,000+ concurrent users with production-grade stability.",
+    tech: "Capacity planning, horizontal scaling, stateful services, production hardening.",
+    askPrompt:
+      "Describe how you scaled the enterprise communications platform to 5,000+ concurrent users.",
   },
 ];
 
-export type SkillGroup = {
-  category: string;
-  items: string[];
+export type ArchitectureDiagram = {
+  id: string;
+  title: string;
+  caption: string;
+  mermaid: string;
 };
 
-export const skillGroups: SkillGroup[] = [
+export const architectureDiagrams: ArchitectureDiagram[] = [
   {
-    category: "Cloud & Architecture",
-    items: [
-      "AWS",
-      "Azure",
-      "GCP",
-      "Event-Driven Architecture",
-      "Microservices",
-      "API Gateway Management",
-      "gRPC",
-      "Serverless",
-    ],
+    id: "genai-arch",
+    title: "On-Prem GenAI Copilot Architecture",
+    caption:
+      "Private LLM path with RAG, citations, and audit logging — no data leaves the regulated boundary.",
+    mermaid: `flowchart LR
+  User[User] --> GW[API Gateway / Auth]
+  GW --> Orch[Orchestrator]
+  Orch --> RAG[RAG Pipeline]
+  RAG --> Ing[Ingestion]
+  Ing --> Chunk[Chunking]
+  Chunk --> Emb[Embedding]
+  Emb --> VS[(Vector Store)]
+  Orch --> LLM[Private LLM]
+  VS --> Orch
+  LLM --> Resp[Response with citations]
+  Orch --> Audit[Audit Log]`,
   },
   {
-    category: "AI & Machine Learning",
-    items: [
-      "Agentic Workflows",
-      "LLM Orchestration",
-      "RAG Pipelines",
-      "Automated Tool-Calling",
-      "Real-Time AI Communications",
-    ],
+    id: "event-arch",
+    title: "High-Throughput Event Pipeline",
+    caption:
+      "Partitioned streaming with back-pressure and a dedicated observability plane for production ops.",
+    mermaid: `flowchart LR
+  Prod[Producers] --> Bus[Message Bus / Streaming Layer]
+  Bus --> Cons[Processing Consumers]
+  Cons --> Sink[Sink / Downstream]
+  Cons --> Obs[Observability plane]
+  Bus --> Obs`,
   },
   {
-    category: "Data & Streaming",
-    items: [
-      "Apache Kafka",
-      "Redis",
-      "PostgreSQL",
-      "Real-Time Streaming Analytics",
-      "High-Throughput Event Pipelines",
-    ],
+    id: "comms-arch",
+    title: "Enterprise Communications Platform",
+    caption:
+      "Edge load balancing into stateless services plus a stateful session layer over the real-time core.",
+    mermaid: `flowchart LR
+  Clients[Clients] --> LB[Load Balancer / Edge]
+  LB --> Stateless[Stateless services]
+  LB --> Session[Stateful session layer]
+  Stateless --> Core[Real-time media / messaging core]
+  Session --> Core
+  Core --> Persist[Persistence and Analytics]`,
   },
   {
-    category: "Languages & Frameworks",
-    items: ["Python", "TypeScript", "Node.js", "Next.js", "Solidity", "C#"],
+    id: "fde-flow",
+    title: "Typical Forward-Deployed Engagement Flow",
+    caption:
+      "Whiteboard to production: discovery, reference architecture, spike, harden, then handover.",
+    mermaid: `flowchart LR
+  D[Discovery and Whiteboarding] --> R[Reference Architecture]
+  R --> S[Spike / POC]
+  S --> P[Production Hardening]
+  P --> H[Handover and Knowledge Transfer]`,
   },
-  {
-    category: "DevOps & Tooling",
-    items: ["CI/CD", "Docker", "Kubernetes", "Release Coordination"],
-  },
-  {
-    category: "Client & Leadership",
-    items: [
-      "Solution Workshops",
-      "RFP Responses",
-      "Technical Demonstrations",
-      "Stakeholder Management",
-      "Cross-Functional Leadership",
-      "Mentorship",
-      "Roadmap Planning",
-    ],
-  },
+];
+
+export const coreCapabilities = [
+  "AI-Native & GenAI Architecture (on-prem & hybrid)",
+  "Event-driven and high-throughput distributed systems",
+  "Enterprise integration (Salesforce, SAP C4C, MS Dynamics, Genesys, Cisco, etc.)",
+  "Cloud & hybrid infrastructure (AWS primary)",
+  "Observability & production operations (Splunk and similar)",
+  "Forward-deployed engineering: from whiteboard to production ownership",
 ];
 
 export const enterpriseLogos = [
@@ -182,13 +172,25 @@ export const enterpriseLogos = [
   { name: "Splunk", key: "splunk" },
   { name: "Salesforce", key: "salesforce" },
   { name: "SAP C4C", key: "sap" },
-  { name: "MS Dynamics", key: "dynamics" },
+  { name: "Microsoft Dynamics", key: "dynamics" },
   { name: "Genesys", key: "genesys" },
   { name: "Cisco", key: "cisco" },
 ] as const;
 
+export const about = {
+  line1: "I'm Hashim — Solutions Architect and Forward Deployed Engineer.",
+  line2:
+    "Over the last 5+ years I've owned the full lifecycle of mission-critical platforms. The last 3+ years have been focused on architecture and delivery of AI and distributed systems in complex enterprise environments.",
+  line3:
+    "I move fluidly between stakeholder whiteboarding sessions and deep production debugging. My north star is simple: build technology that works — reliably, securely, and at scale.",
+};
+
+export const contact = {
+  headline: "Let's build something that actually ships.",
+};
+
 export const chatSuggestions = [
-  "What's your strongest enterprise win?",
-  "Tell me about the GenAI Copilot",
-  "Availability for interviews?",
+  "Tell me about the on-prem GenAI copilot",
+  "How did you hit 100k+ events/sec?",
+  "What's your forward-deployed approach?",
 ];

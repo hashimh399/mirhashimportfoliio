@@ -118,6 +118,11 @@ body {
   display: none;
 }
 
+.mermaid-wrap svg {
+  max-width: 100%;
+  height: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-logo-marquee,
   .animate-marquee,
