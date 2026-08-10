@@ -1,28 +1,26 @@
-"use client";
-
 import {
   hero,
   siteConfig,
   linkHref,
   isPlaceholderLink,
 } from "@/lib/site.config";
+import { AskAiButton, NavigateButton } from "@/components/SectionActions";
 
-type IntroSectionProps = {
-  onAskAi?: () => void;
-  onViewCaseStudies?: () => void;
-};
-
-export default function IntroSection({
-  onAskAi,
-  onViewCaseStudies,
-}: IntroSectionProps) {
+export default function IntroSection() {
   return (
-    <div className="flex flex-col gap-8 pb-6 md:pb-8">
+    <section
+      id="introduction"
+      aria-labelledby="introduction-heading"
+      className="flex flex-col gap-8 pb-6 md:pb-8"
+    >
       <div className="max-w-3xl">
         <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-fg">
           {siteConfig.title}
         </p>
-        <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] font-semibold tracking-tight text-foreground leading-[1.15]">
+        <h2
+          id="introduction-heading"
+          className="text-3xl sm:text-4xl md:text-[2.75rem] font-semibold tracking-tight text-foreground leading-[1.15]"
+        >
           {hero.headline}
         </h2>
         <p className="mt-5 text-base md:text-lg text-muted leading-relaxed">
@@ -30,16 +28,16 @@ export default function IntroSection({
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <ul className="flex flex-wrap gap-2 list-none p-0 m-0">
         {hero.stats.map((stat) => (
-          <span
+          <li
             key={stat}
             className="rounded-md border border-border bg-surface px-3 py-2 text-xs font-medium text-muted sm:text-[13px]"
           >
             {stat}
-          </span>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
         <a
@@ -58,20 +56,15 @@ export default function IntroSection({
         >
           Book a Call
         </a>
-        <button
-          type="button"
-          onClick={onViewCaseStudies}
+        <NavigateButton
+          label="View Case Studies"
+          sectionId="case-studies"
           className="inline-flex justify-center px-5 py-2.5 border border-border bg-surface text-foreground text-sm font-medium rounded-md hover:bg-surface-2 transition-colors"
-        >
-          View Case Studies
-        </button>
-        <button
-          type="button"
-          onClick={onAskAi}
+        />
+        <AskAiButton
+          label="Ask AI"
           className="inline-flex justify-center px-5 py-2.5 text-muted text-sm font-medium hover:text-foreground transition-colors"
-        >
-          Ask AI
-        </button>
+        />
       </div>
 
       <div className="max-w-2xl border-t border-border pt-8">
@@ -79,6 +72,6 @@ export default function IntroSection({
           {hero.shortIntro}
         </p>
       </div>
-    </div>
+    </section>
   );
 }

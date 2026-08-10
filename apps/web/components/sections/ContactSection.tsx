@@ -7,9 +7,16 @@ import {
 
 export default function ContactSection() {
   return (
-    <div className="pb-6 md:pb-8">
+    <section
+      id="contact"
+      aria-labelledby="contact-heading"
+      className="pb-6 md:pb-8"
+    >
       <div className="max-w-2xl rounded-xl border border-border bg-surface p-6 sm:p-8">
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+        <h2
+          id="contact-heading"
+          className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+        >
           {contact.headline}
         </h2>
 
@@ -53,6 +60,6 @@ export default function ContactSection() {
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
