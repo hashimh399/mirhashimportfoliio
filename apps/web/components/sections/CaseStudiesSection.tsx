@@ -21,8 +21,8 @@ export default function CaseStudiesSection() {
           Case Studies
         </h2>
         <p className="mt-3 text-sm text-muted leading-relaxed">
-          Selected delivery work — expand a card for challenge, solution, impact,
-          and tech.
+          Selected delivery work at Consilium Software and enterprise clients —
+          expand a card for challenge, solution, impact, and stack.
         </p>
       </header>
 

@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Hashim Mir | Solutions Architect & Forward Deployed Engineer",
   description:
-    "Solutions Architect & Forward Deployed Engineer turning complex enterprise problems into resilient, production-grade AI and distributed systems. On-prem GenAI, 100k+ events/sec pipelines, and enterprise communications at scale.",
+    "Solutions Architect at Consilium Software. Engineer of Webex App Hub integrations — UniAgent, UAD, UniVCX, UniCampaign, SplunkBridge. On-prem GenAI, Kafka at 100k+ events/sec, and omnichannel CRM integrations for Cisco, Genesys, and WhatsApp.",
 };
 
 export default function RootLayout({

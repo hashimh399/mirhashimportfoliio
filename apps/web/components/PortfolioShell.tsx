@@ -97,7 +97,7 @@ export default function PortfolioShell({ panels }: PortfolioShellProps) {
                 <span className="text-muted-fg">.</span>
               </p>
               <p className="text-[10px] md:text-[11px] text-muted-fg mt-1.5 tracking-[0.08em] uppercase font-medium leading-snug">
-                Solutions Architect · FDE
+                Consilium Software · Webex Integrations
               </p>
             </div>
             <ThemeToggle className="shrink-0" />

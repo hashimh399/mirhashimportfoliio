@@ -18,7 +18,7 @@ interface AiPersonaProps {
 }
 
 const WELCOME =
-  "Hey — ask me anything about Hashim's resume, experience, or projects.";
+  "Hey — ask me about Consilium's Webex products, the on-prem GenAI copilot, SplunkBridge, or any integration work.";
 
 export default function AiPersona({
   onClose,

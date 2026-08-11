@@ -21,18 +21,20 @@ export function isPlaceholderLink(url: string): boolean {
 
 export const hero = {
   headline:
-    "Architecting AI-Native Systems at Enterprise Scale. From Whiteboard to Production",
+    "I design and ship enterprise contact-center and AI systems — from Webex integrations to on-prem GenAI.",
   subheadline:
-    "Solutions Architect & Forward Deployed Engineer. I turn complex enterprise problems into resilient, production-grade AI and distributed systems that actually ship and stay up.",
+    "Solutions Architect at Consilium Software. I engineer production integrations for Cisco Webex, Genesys, Splunk, WhatsApp, and major CRMs — most of the products listed on the Webex App Hub under Consilium.",
   stats: [
     "5+ years software engineering",
-    "3+ years Solutions Architect",
-    "On-prem GenAI copilots for regulated banks",
-    "Event pipelines at 100k+ events/sec",
-    "Communications platforms scaled to 5,000+ concurrent enterprise users",
+    "Solutions Architect at Consilium Software",
+    "Engineered most Consilium products on Webex App Hub",
+    "UniAgent · UAD · UniVCX · UniCampaign · SplunkBridge",
+    "On-prem GenAI copilot for a regulated bank",
+    "Kafka pipeline at 100k+ events/sec into Splunk",
+    "Platforms scaled to 5,000+ concurrent agents",
   ],
   shortIntro:
-    "I'm Hashim. I bridge enterprise ambition and production reality. Whether whiteboarding architecture with stakeholders or debugging distributed systems at 2 a.m., I care about technology that works — reliably, securely, and at scale.",
+    "I'm Hashim, based in Delhi. I own architecture and delivery for mission-critical CX platforms — pre-sales whiteboarding, RFP responses, spikes, production hardening, and the debugging that comes after launch. My rule: design for production from day one. Demos that can't survive real users aren't done.",
 };
 
 export type CaseStudy = {
@@ -48,49 +50,64 @@ export type CaseStudy = {
 
 export const caseStudies: CaseStudy[] = [
   {
+    id: "webex-apphub",
+    title: "Consilium × Webex Contact Center Product Suite",
+    summary:
+      "Engineered most of Consilium's Webex App Hub integrations — CRM CTI, unified agent desktop, video CX, outbound campaigns, and Splunk observability.",
+    challenge:
+      "Enterprise contact centers on Cisco Webex Contact Center (WxCC) need deep CRM integration, omnichannel agent desktops, outbound campaign tooling, and real-time analytics — all certified, compliant, and shippable as SaaS on the Webex App Hub.",
+    solution:
+      "Led architecture and engineering across the Consilium product suite: UniAgent™ (CRM CTI for Webex Calling — screen pop, click-to-dial, AI call notes), Unified Agent Desktop (voice + digital in one surface), UniVCX™ (video, co-browse, e-signature), UniCampaign™ (AI-driven outbound across voice, SMS, email, WhatsApp), and SplunkBridge (WxCC → Splunk real-time ingestion). Built integrations with Salesforce, SAP C4C, Microsoft Dynamics, Genesys, and WhatsApp Business channels.",
+    impact:
+      "Products live on the Webex App Hub and Cisco Commerce Workspace (CONSILIUM-APPS). Used by enterprise contact centers globally. Platforms scaled to 5,000+ concurrent agents on blended voice, chat, and digital workloads.",
+    tech: "Cisco Webex CC/Calling APIs, TypeScript, Node.js, C#, Kafka, Redis, PostgreSQL, AWS/GCP, Salesforce, SAP C4C, MS Dynamics, Genesys, WhatsApp Business API, Splunk HEC.",
+    askPrompt:
+      "Tell me about the Consilium Webex App Hub products you engineered — UniAgent, UAD, UniVCX, UniCampaign, and SplunkBridge.",
+  },
+  {
     id: "onprem-genai",
     title: "On-Premise GenAI Copilot for a Regulated Bank",
     summary:
-      "Production-grade on-prem GenAI copilot used by hundreds of employees under full regulatory compliance.",
+      "Secure, on-prem GenAI copilot with RAG and agentic workflows — no customer data leaves the bank's environment.",
     challenge:
-      "A major regulated bank needed an internal GenAI copilot for knowledge work and document analysis. Public cloud LLMs were off-limits due to data residency and compliance requirements.",
+      "A regulated bank needed an internal GenAI copilot for knowledge work, document analysis, and agent assist. Public cloud LLMs were off-limits due to data residency, audit requirements, and compliance review.",
     solution:
-      "Designed and led the architecture of a fully on-premise GenAI platform: Private LLM deployment + retrieval-augmented generation (RAG) pipeline; Secure document ingestion and vector store; Role-based access and full audit logging; Integration with existing enterprise systems.",
+      "Architected a fully on-prem GenAI platform: private LLM deployment, RAG pipeline with secure document ingestion and vector store, role-based access with full audit logging, and agentic workflows with automated tool-calling to execute backend operations without data leaving the environment.",
     impact:
-      "Delivered production-grade copilot used by hundreds of employees. Maintained full regulatory compliance. Significantly reduced time spent searching internal knowledge bases.",
-    tech: "On-prem infrastructure, private LLMs, vector databases, enterprise identity systems, secure networking.",
+      "Production copilot used by hundreds of bank employees. Passed internal security and compliance review. Cut time spent searching internal knowledge bases from minutes to seconds for common queries.",
+    tech: "On-prem GPU infrastructure, private LLMs, vector databases (embeddings + retrieval), enterprise IAM, secure networking, Python, orchestration layer for agentic tool-calling.",
     askPrompt:
-      "Tell me about the on-premise GenAI Copilot for a regulated bank.",
+      "Tell me about the on-premise GenAI copilot for the regulated bank.",
   },
   {
-    id: "event-pipeline",
-    title: "High-Throughput Event-Driven Pipeline",
+    id: "splunkbridge",
+    title: "SplunkBridge — 100k+ Events/sec WxCC → Splunk Pipeline",
     summary:
-      "Sustained 100k+ events/sec in production with high availability and clear operational observability.",
+      "High-throughput Kafka pipeline ingesting, enriching, and routing Webex Contact Center events into Splunk for real-time ops dashboards.",
     challenge:
-      "Need to process and react to 100,000+ events per second with low latency and high reliability for a mission-critical enterprise system.",
+      "Webex Contact Center generates massive event volumes — agent status, interaction metrics, queue stats, customer journey data. Operations teams needed this in Splunk in near real time, without blocking WxCC or losing events under peak load.",
     solution:
-      "Architected an event-driven pipeline using modern streaming and messaging patterns, with careful attention to partitioning, back-pressure handling, exactly-once semantics where required, and observability.",
+      "Designed SplunkBridge: asynchronous ingestion via Webex APIs and webhooks, Kafka-based streaming with partitioning and back-pressure handling, data enrichment (agent details, team IDs, structured Splunk-compatible formats), and push to Splunk HTTP Event Collector (HEC) for dashboards and alerting.",
     impact:
-      "Sustained 100k+ events/sec in production. High availability and graceful degradation under load. Clear operational dashboards and alerting.",
-    tech: "Streaming / messaging, partitioning, back-pressure, observability.",
+      "Sustained 100k+ events/sec in production with near-zero ingestion latency. Real-time contact-center observability for ops teams. Graceful degradation under load spikes with clear alerting.",
+    tech: "Apache Kafka, Webex Contact Center APIs, OAuth 2.0, Splunk HEC, Redis, partitioning & back-pressure, observability dashboards.",
     askPrompt:
-      "Tell me about the high-throughput event-driven pipeline at 100k+ events/sec.",
+      "How did SplunkBridge handle 100k+ events per second from Webex into Splunk?",
   },
   {
-    id: "comms-scale",
-    title: "Enterprise Communications Platform Scale-Up",
+    id: "omnichannel-integrations",
+    title: "Omnichannel CRM & Messaging Integrations",
     summary:
-      "Scaled a communications platform to 5,000+ concurrent enterprise users with production-grade stability.",
+      "Deep CTI and reverse-CTI integrations bridging contact-center platforms into Salesforce, SAP C4C, Dynamics, Genesys, Cisco, and WhatsApp.",
     challenge:
-      "Scale a communications platform to support 5,000+ concurrent enterprise users while maintaining performance and reliability.",
+      "Enterprise customers run blended contact centers — voice, chat, email, SMS, WhatsApp — each tied to a different CRM or legacy platform. Agents need one screen, one login, and context on every interaction without switching tools.",
     solution:
-      "End-to-end ownership of architecture and delivery: capacity planning, horizontal scaling strategy, stateful service design, and production hardening.",
+      "Built and maintained production integrations across the Consilium connector portfolio: embedded CTI widgets in CRMs, reverse-CTI for click-to-dial and screen pop, WhatsApp Business API routing into agent queues, and Genesys/Cisco telephony bridges. Owned capacity planning and horizontal scaling as deployments grew.",
     impact:
-      "Successfully scaled to 5,000+ concurrent users with production-grade stability.",
-    tech: "Capacity planning, horizontal scaling, stateful services, production hardening.",
+      "Integrations deployed across multiple enterprise customers. Single agent desktop for voice and digital channels. Reduced average handle time by eliminating context switching between CRM and contact-center tools.",
+    tech: "Salesforce Open CTI, SAP C4C, MS Dynamics, Genesys Cloud APIs, Cisco Finesse/Webex, WhatsApp Business API, gRPC, WebSockets, microservices on AWS.",
     askPrompt:
-      "Describe how you scaled the enterprise communications platform to 5,000+ concurrent users.",
+      "Tell me about your CRM and messaging integrations with Cisco, Genesys, and WhatsApp.",
   },
 ];
 
@@ -103,94 +120,110 @@ export type ArchitectureDiagram = {
 
 export const architectureDiagrams: ArchitectureDiagram[] = [
   {
+    id: "webex-suite",
+    title: "Consilium Webex App Hub Integration Layer",
+    caption:
+      "CRM-embedded CTI, unified agent desktop, and WxCC event routing into Splunk — the integration spine behind UniAgent, UAD, and SplunkBridge.",
+    mermaid: `flowchart LR
+  Agent[Agent CRM Desktop] --> CTI[UniAgent CTI Layer]
+  CTI --> WxCC[Webex Contact Center]
+  WxCC --> Events[WxCC Event Stream]
+  Events --> Bridge[SplunkBridge]
+  Bridge --> Kafka[Kafka Pipeline]
+  Kafka --> Splunk[(Splunk HEC)]
+  WxCC --> UAD[Unified Agent Desktop]
+  UAD --> Digital[Chat · Email · WhatsApp]`,
+  },
+  {
     id: "genai-arch",
     title: "On-Prem GenAI Copilot Architecture",
     caption:
-      "Private LLM path with RAG, citations, and audit logging — no data leaves the regulated boundary.",
+      "Private LLM with RAG, agentic tool-calling, and audit logging — all data stays inside the regulated boundary.",
     mermaid: `flowchart LR
-  User[User] --> GW[API Gateway / Auth]
+  User[Bank Employee] --> GW[API Gateway / Auth]
   GW --> Orch[Orchestrator]
   Orch --> RAG[RAG Pipeline]
-  RAG --> Ing[Ingestion]
-  Ing --> Chunk[Chunking]
-  Chunk --> Emb[Embedding]
-  Emb --> VS[(Vector Store)]
+  RAG --> VS[(Vector Store)]
   Orch --> LLM[Private LLM]
-  VS --> Orch
+  Orch --> Tools[Agentic Tool-Calling]
+  Tools --> Backend[Internal Systems]
   LLM --> Resp[Response with citations]
   Orch --> Audit[Audit Log]`,
   },
   {
-    id: "event-arch",
-    title: "High-Throughput Event Pipeline",
+    id: "splunkbridge-arch",
+    title: "SplunkBridge Event Pipeline",
     caption:
-      "Partitioned streaming with back-pressure and a dedicated observability plane for production ops.",
+      "Async WxCC ingestion → Kafka partitioning → enrichment → Splunk HEC. Built to sustain 100k+ events/sec.",
     mermaid: `flowchart LR
-  Prod[Producers] --> Bus[Message Bus / Streaming Layer]
-  Bus --> Cons[Processing Consumers]
-  Cons --> Sink[Sink / Downstream]
-  Cons --> Obs[Observability plane]
-  Bus --> Obs`,
-  },
-  {
-    id: "comms-arch",
-    title: "Enterprise Communications Platform",
-    caption:
-      "Edge load balancing into stateless services plus a stateful session layer over the real-time core.",
-    mermaid: `flowchart LR
-  Clients[Clients] --> LB[Load Balancer / Edge]
-  LB --> Stateless[Stateless services]
-  LB --> Session[Stateful session layer]
-  Stateless --> Core[Real-time media / messaging core]
-  Session --> Core
-  Core --> Persist[Persistence and Analytics]`,
+  WxCC[Webex CC APIs / Webhooks] --> Ing[Async Ingestion]
+  Ing --> Kafka[Kafka — partitioned streams]
+  Kafka --> Enrich[Enrichment Layer]
+  Enrich --> HEC[Splunk HEC]
+  Kafka --> Obs[Ops Dashboards & Alerting]`,
   },
   {
     id: "fde-flow",
-    title: "Typical Forward-Deployed Engagement Flow",
+    title: "How I Work — Discovery to Production",
     caption:
-      "Whiteboard to production: discovery, reference architecture, spike, harden, then handover.",
+      "Typical engagement: understand the business problem, design the reference architecture, spike the risky parts, harden for production, then hand over.",
     mermaid: `flowchart LR
-  D[Discovery and Whiteboarding] --> R[Reference Architecture]
+  D[Discovery & Whiteboarding] --> R[Reference Architecture]
   R --> S[Spike / POC]
   S --> P[Production Hardening]
-  P --> H[Handover and Knowledge Transfer]`,
+  P --> H[Handover & Sustainment]`,
   },
 ];
 
+export const workPrinciples = [
+  "Design for production from day one — prototypes that can't survive real users are just demos.",
+  "Own the outcome, not just the code — accountable from pre-sales whiteboarding to post-launch sustainment.",
+  "Treat AI as an engineering discipline — testing, observability, and security, not magic.",
+];
+
 export const coreCapabilities = [
-  "AI-Native & GenAI Architecture (on-prem & hybrid)",
-  "Event-driven and high-throughput distributed systems",
-  "Enterprise integration (Salesforce, SAP C4C, MS Dynamics, Genesys, Cisco, etc.)",
-  "Cloud & hybrid infrastructure (AWS primary)",
-  "Observability & production operations (Splunk and similar)",
-  "Forward-deployed engineering: from whiteboard to production ownership",
+  "Webex Contact Center & Cisco telephony integrations",
+  "CRM CTI / reverse-CTI (Salesforce, SAP C4C, MS Dynamics)",
+  "GenAI & agentic workflows (on-prem, hybrid, RAG)",
+  "High-throughput event pipelines (Kafka → Splunk)",
+  "Omnichannel CX (voice, chat, email, SMS, WhatsApp)",
+  "Cloud & hybrid infrastructure (AWS, GCP)",
+];
+
+export const consiliumProducts = [
+  "UniAgent™ — CRM CTI for Webex Calling",
+  "Unified Agent Desktop — omnichannel agent surface",
+  "UniVCX™ — video, co-browse, e-signature",
+  "UniCampaign™ — AI outbound campaigns",
+  "SplunkBridge — WxCC → Splunk real-time pipeline",
 ];
 
 export const enterpriseLogos = [
-  { name: "AWS", key: "aws" },
+  { name: "Cisco Webex", key: "webex" },
+  { name: "Cisco", key: "cisco" },
+  { name: "Genesys", key: "genesys" },
   { name: "Splunk", key: "splunk" },
+  { name: "WhatsApp", key: "whatsapp" },
   { name: "Salesforce", key: "salesforce" },
   { name: "SAP C4C", key: "sap" },
   { name: "Microsoft Dynamics", key: "dynamics" },
-  { name: "Genesys", key: "genesys" },
-  { name: "Cisco", key: "cisco" },
 ] as const;
 
 export const about = {
-  line1: "I'm Hashim — Solutions Architect and Forward Deployed Engineer.",
+  line1:
+    "I'm Hashim — Solutions Architect at Consilium Software, based in Delhi.",
   line2:
-    "Over the last 5+ years I've owned the full lifecycle of mission-critical platforms. The last 3+ years have been focused on architecture and delivery of AI and distributed systems in complex enterprise environments.",
+    "For the last 3+ years I've led architecture and engineering for Consilium's Webex Contact Center product suite — most of what's listed on the Webex App Hub. Before that, I built enterprise software foundations at Cognizant. Across both roles, I've owned the full lifecycle: RFPs, reference architectures, spikes, production delivery, and sustainment.",
   line3:
-    "I move fluidly between stakeholder whiteboarding sessions and deep production debugging. My north star is simple: build technology that works — reliably, securely, and at scale.",
+    "I work best where business requirements meet hard technical constraints — regulated on-prem AI, contact-center integrations at scale, or a Kafka pipeline that can't drop events at peak load. I move between whiteboard sessions and production debugging without treating them as different jobs.",
 };
 
 export const contact = {
-  headline: "Let's build something that actually ships.",
+  headline: "Have a hard integration or architecture problem? Let's talk.",
 };
 
 export const chatSuggestions = [
-  "Tell me about the on-prem GenAI copilot",
-  "How did you hit 100k+ events/sec?",
-  "What's your forward-deployed approach?",
+  "What Consilium products did you build for Webex?",
+  "How does SplunkBridge handle 100k events/sec?",
+  "Tell me about the on-prem GenAI bank copilot",
 ];
