@@ -1,10 +1,11 @@
 import {
+  featuredWork,
   hero,
   siteConfig,
   linkHref,
   isPlaceholderLink,
 } from "@/lib/site.config";
-import { AskAiButton, NavigateButton } from "@/components/SectionActions";
+import { NavigateButton } from "@/components/SectionActions";
 
 export default function IntroSection() {
   return (
@@ -61,16 +62,55 @@ export default function IntroSection() {
           sectionId="case-studies"
           className="inline-flex justify-center px-5 py-2.5 border border-border bg-surface text-foreground text-sm font-medium rounded-md hover:bg-surface-2 transition-colors"
         />
-        <AskAiButton
-          label="Ask AI"
+        <a
+          href={linkHref(siteConfig.linkedinUrl)}
+          target={
+            isPlaceholderLink(siteConfig.linkedinUrl) ? undefined : "_blank"
+          }
+          rel="noopener noreferrer"
           className="inline-flex justify-center px-5 py-2.5 text-muted text-sm font-medium hover:text-foreground transition-colors"
-        />
+        >
+          LinkedIn
+        </a>
       </div>
 
       <div className="max-w-2xl border-t border-border pt-8">
         <p className="text-sm md:text-[15px] text-muted leading-relaxed">
           {hero.shortIntro}
         </p>
+      </div>
+
+      <div className="border-t border-border pt-8">
+        <div className="mb-5 flex items-baseline justify-between gap-4">
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-fg">
+            Selected work
+          </h3>
+          <NavigateButton
+            label="See all →"
+            sectionId="case-studies"
+            className="text-xs font-medium text-muted hover:text-foreground transition-colors"
+          />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {featuredWork.map((item) => (
+            <article
+              key={item.id}
+              className="rounded-lg border border-border bg-surface p-4"
+            >
+              <h4 className="text-sm font-semibold text-foreground">
+                {item.title}
+              </h4>
+              <p className="mt-2 text-xs text-muted leading-relaxed">
+                {item.summary}
+              </p>
+              <NavigateButton
+                label="Read case study"
+                sectionId="case-studies"
+                className="mt-3 text-xs font-medium text-muted hover:text-foreground transition-colors"
+              />
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );

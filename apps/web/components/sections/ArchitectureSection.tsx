@@ -16,8 +16,8 @@ export default function ArchitectureSection() {
           Architecture
         </h2>
         <p className="mt-3 text-sm text-muted leading-relaxed">
-          High-level diagrams for core systems and a typical forward-deployed
-          engagement.
+          Reference architectures for Consilium&apos;s Webex integrations, on-prem
+          GenAI, and the SplunkBridge event pipeline.
         </p>
       </header>
 

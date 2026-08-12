@@ -1,6 +1,6 @@
 "use client";
 
-import { SiCisco, SiSap, SiSplunk } from "react-icons/si";
+import { SiCisco, SiSap, SiSplunk, SiWhatsapp } from "react-icons/si";
 import { enterpriseLogos } from "@/lib/site.config";
 
 type LogoKey = (typeof enterpriseLogos)[number]["key"];
@@ -15,10 +15,24 @@ function LogoMark({ logoKey }: { logoKey: LogoKey }) {
       return <SiSap className={iconClass} aria-hidden />;
     case "cisco":
       return <SiCisco className={iconClass} aria-hidden />;
-    case "aws":
+    case "genesys":
       return (
-        <span className="text-[11px] font-bold tracking-tight" aria-hidden>
-          aws
+        <span
+          className="inline-flex h-5 w-5 items-center justify-center rounded-[3px] border border-current text-[9px] font-bold"
+          aria-hidden
+        >
+          G
+        </span>
+      );
+    case "whatsapp":
+      return <SiWhatsapp className={iconClass} aria-hidden />;
+    case "webex":
+      return (
+        <span
+          className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-current text-[7px] font-bold"
+          aria-hidden
+        >
+          Wx
         </span>
       );
     case "salesforce":
@@ -39,26 +53,17 @@ function LogoMark({ logoKey }: { logoKey: LogoKey }) {
           DY
         </span>
       );
-    case "genesys":
-      return (
-        <span
-          className="inline-flex h-5 w-5 items-center justify-center rounded-[3px] border border-current text-[9px] font-bold"
-          aria-hidden
-        >
-          G
-        </span>
-      );
     default:
       return null;
   }
 }
 
-/** Static grid — each logo once. No carousel. */
+/** Platforms and ecosystems Hashim has built production integrations for. */
 export default function EnterpriseLogoGrid() {
   return (
     <div>
       <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-fg">
-        Enterprise ecosystems
+        Platforms I&apos;ve built integrations for
       </p>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {enterpriseLogos.map((logo) => (
