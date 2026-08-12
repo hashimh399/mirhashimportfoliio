@@ -6,7 +6,8 @@ export const siteConfig = {
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL || "[Insert Calendly Link Here]",
   linkedinUrl:
-    process.env.NEXT_PUBLIC_LINKEDIN_URL || "[Insert LinkedIn URL]",
+    process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+    "https://linkedin.com/in/hashim-mir-705b0114a",
   email: process.env.NEXT_PUBLIC_EMAIL || "Hashimh399@gmail.com",
 };
 
@@ -25,17 +26,37 @@ export const hero = {
   subheadline:
     "Solutions Architect at Consilium Software. I engineer production integrations for Cisco Webex, Genesys, Splunk, WhatsApp, and major CRMs — most of the products listed on the Webex App Hub under Consilium.",
   stats: [
-    "5+ years software engineering",
-    "Solutions Architect at Consilium Software",
     "Engineered most Consilium products on Webex App Hub",
-    "UniAgent · UAD · UniVCX · UniCampaign · SplunkBridge",
     "On-prem GenAI copilot for a regulated bank",
     "Kafka pipeline at 100k+ events/sec into Splunk",
     "Platforms scaled to 5,000+ concurrent agents",
+    "5+ years software engineering",
   ],
   shortIntro:
     "I'm Hashim, based in Delhi. I own architecture and delivery for mission-critical CX platforms — pre-sales whiteboarding, RFP responses, spikes, production hardening, and the debugging that comes after launch. My rule: design for production from day one. Demos that can't survive real users aren't done.",
 };
+
+/** Top projects surfaced on the intro — mirrors caseStudies ids. */
+export const featuredWork = [
+  {
+    id: "webex-apphub",
+    title: "Consilium × Webex App Hub",
+    summary:
+      "UniAgent, UAD, UniVCX, UniCampaign, SplunkBridge — engineered most of Consilium's Webex-certified product suite.",
+  },
+  {
+    id: "onprem-genai",
+    title: "On-Prem GenAI Copilot",
+    summary:
+      "Private LLM + RAG + agentic tool-calling for a regulated bank. No data leaves the environment.",
+  },
+  {
+    id: "splunkbridge",
+    title: "SplunkBridge Pipeline",
+    summary:
+      "WxCC events → Kafka → Splunk HEC at 100k+ events/sec with near-zero ingestion latency.",
+  },
+] as const;
 
 export type CaseStudy = {
   id: string;

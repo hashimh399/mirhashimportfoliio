@@ -26,7 +26,7 @@ export default function CaseStudiesSection() {
         </p>
       </header>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         {caseStudies.map((cs) => {
           const open = openId === cs.id;
           return (

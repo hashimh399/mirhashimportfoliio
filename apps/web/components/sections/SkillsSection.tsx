@@ -1,5 +1,4 @@
 import EnterpriseLogoGrid from "@/components/EnterpriseLogoGrid";
-import { AskAiButton } from "@/components/SectionActions";
 import {
   consiliumProducts,
   coreCapabilities,
@@ -74,14 +73,6 @@ export default function SkillsSection() {
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="mt-10">
-        <AskAiButton
-          label="Ask AI about my experience"
-          showIcon
-          className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
-        />
       </div>
     </section>
   );
